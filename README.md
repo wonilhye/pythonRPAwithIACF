@@ -1,5 +1,14 @@
 IACF PYTHON STUDY GROUP
 
+**참고교재**
+https://wikidocs.net/book/1
+
+**자습서**
+https://docs.python.org/ko/3.12/tutorial/index.html
+
+**참고사이트**
+추후 업데이트
+
 **첫번째 수업 ( 2024.10.08 )**
  - 참여자 : 10명 중 7명 참여
  - 문법기초가 필요하며 비전공자로서의 개발분야 접근법 교육
