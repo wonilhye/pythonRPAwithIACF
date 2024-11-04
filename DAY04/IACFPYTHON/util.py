@@ -14,18 +14,13 @@ def crdir(chk="dir" ,display=False) :
         print("현재 디렉토리 : " + directory)
     return directory
 
-def acctonum(account_number, chk="Bank") :
-    numbers_only = 0
-    numbers_string = ""
-    if chk == "Bank" :
-        # 정규식 패턴 사용하여 숫자만 추출
-        numbers_only = re.findall(r'\d+', account_number)
-    else :
-        # 정규식 패턴 사용하여 숫자만 추출
-        numbers_only = re.findall(r'\d{11,16}', account_number)
-    # 리스트를 하나의 문자열로 합치기
-    numbers_string = ''.join(numbers_only)
-    return str(numbers_string)
+def acctonum(account_number) :
+    # 정규식 패턴
+    pattern = r'(\d{6}-?\d{2}-?\d{6})|(\d{12,})'
+    # 계좌번호 추출
+    result = re.search(pattern, account_number)
+    account_number = result.group().replace('-', '') if result else None
+    return str(account_number)
 
 def autowidth(output_file_path) :
     # 엑셀 파일 불러오기
