@@ -21,24 +21,3 @@ def acctonum(account_number) :
     result = re.search(pattern, account_number)
     account_number = result.group().replace('-', '') if result else None
     return str(account_number)
-
-def autowidth(output_file_path) :
-    # 엑셀 파일 불러오기
-    workbook = load_workbook(output_file_path)
-    sheet = workbook.active
-
-    # 각 열의 너비 자동 조정
-    for column in sheet.columns:
-        max_length = 0
-        column_letter = column[0].column_letter  # 열 레터 (A, B, C 등)
-        for cell in column:
-            try:
-                if len(str(cell.value)) > max_length:
-                    max_length = len(str(cell.value))
-            except:
-                pass
-        adjusted_width = (max_length + 2)  # 여유 공간 추가
-        sheet.column_dimensions[column_letter].width = adjusted_width
-
-    # 수정된 엑셀 파일 저장
-    workbook.save(output_file_path)
