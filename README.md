@@ -39,4 +39,15 @@ IACF PYTHON STUDY GROUP
  - pandas 예제 공유
  - 실제 엑셀 파일을 기준으로 pandas로 첫 코딩 실습을 함
  - 과제 : workF에 있는 "거래처원장 056880.xls"을 원본소스로 하고 결과파일을 만들어보셔요.
- - main.py를 참고하셔서 main2.py를 만들어서 최대한 main.py로 돌린 컬럼처럼 나오게 하시면 됩니다. 
+ - main.py를 참고하셔서 main2.py를 만들어서 최대한 main.py로 돌린 컬럼처럼 나오게 하시면 됩니다.
+
+**다섯번째 수업 ( 2024.11.05 )**
+ - 참여자 : 8명 중 6명 참여
+ - pandas 수업 종료
+ - pandas 모듈을 이용한 기본 사용법 숙지
+ - 어떠한 엑셀파일로도 기본적인 요청사항을 처리할 수 있는 기본 코드 작성 : DAY05 / pandas / xlsxProcess.py 참조
+ - xlsxProcess.py 계속 업데이트
+ - 과제는 없으나 아래 사항 참고하여 스스로 학습하기
+   1. xlsxProcess.py 이해하고 변형해가며 익히기
+   2. for문 별표찍기 찾아보고 for문 사용방법 익히기
+   3. DAY05 폴더에 for문 예제 10개 공부하기
