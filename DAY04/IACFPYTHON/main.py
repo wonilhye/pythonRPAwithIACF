@@ -29,4 +29,4 @@ df = df.sort_values(by='거래일시')
 df = df.drop(columns=['잔액(원)','내 통장 표시','적요','처리점','구분'])
 
 # 7. 최종본을 지정경로에 엑셀 파일로 다시 저장
-df.to_excel(output_file_path, index=False) #위에서 header 날렸기에 여기선 날리지 않음
+df.to_excel(output_file_path, index=False)
