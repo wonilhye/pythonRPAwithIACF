@@ -20,7 +20,7 @@
 ### 4. 기존 print 함수를 debug_print()로 교체하기
  - print("프린트할 내용") ==> debug_print("프린트할 내용", False)
       - True : console에도 나오고 log_yyyymmdd.txt에도 저장
-      - False : console에는 나오지 않고 log_yyyymmdd.txt에도 저장
+      - False : console에는 나오지 않고 log_yyyymmdd.txt에만 저장
 ### 5. log_yyyymmdd.txt 생성되는지 확인하기
  - debug_print()로 변경해 놓은 내용이 해당 log파일에 저장되었는지 확인하기
 ### 6. Project 폴더에 있는 README.md 파일의 util.py 코드 이해하기
