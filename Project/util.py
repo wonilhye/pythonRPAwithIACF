@@ -13,7 +13,7 @@ log_filename = os.path.expandvars(r"%UserProfile%\\Downloads\\log_" + today + ".
 # 로그 설정 (파일 저장)
 logging.basicConfig(
     filename=log_filename,              # 로그 파일명
-    level=logging.DEBUG,                # 로그 레벨
+    level=logging.INFO,                # 로그 레벨
     format="%(asctime)s - %(message)s", # 로그 포맷
     filemode="a"                        #a = append, w = 덮어쓰기
 )
@@ -111,7 +111,7 @@ def debug_print(*args, display=False):
     message = f"[{file_name}:{line_number}] - " + " ".join(map(str, args))
 
     # 로그 메시지 파일에 기록
-    logging.debug(message)
+    logging.info(message)
 
     # display=True일 때만 콘솔 출력
     if display:
