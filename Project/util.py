@@ -83,22 +83,25 @@ def select_folder_console(display=False):
 
 def get_login_info(display=False):
     config_file_path = f"{crdir("py", False)}/config.txt"
-    # 파일 읽기
-    with open(config_file_path, 'r') as file:
-        # 파일의 각 줄을 읽어서 리스트로 저장
-        lines = file.readlines()
 
-    # 변수 초기화
-    id_value = password_value = recipient_email = None
+    if os.path.exists(config_file_path):
+        # 파일 읽기
+        with open(config_file_path, 'r') as file:
+            # 파일의 각 줄을 읽어서 리스트로 저장
+            lines = file.readlines()
 
-    for i, line in enumerate(lines):
-        if i == 0:
-            id_value = line.strip()         # 첫 번째 줄: ID
-        elif i == 1:
-            password_value = line.strip()   # 두 번째 줄: Password
-    
-    logininfo={"ID" : id_value,"PW" : password_value}
+        # 변수 초기화
+        id_value = password_value = recipient_email = None
 
+        for i, line in enumerate(lines):
+            if i == 0:
+                id_value = line.strip()         # 첫 번째 줄: ID
+            elif i == 1:
+                password_value = line.strip()   # 두 번째 줄: Password
+        
+        logininfo={"ID" : id_value,"PW" : password_value}
+    else :
+        logininfo={"ID" : None,"PW" : None}
     return logininfo
 
 def debug_print(*args, display=False):
