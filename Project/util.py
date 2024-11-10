@@ -7,27 +7,36 @@ from PyQt5.QtWidgets import QTextEdit, QProgressBar, QFileDialog
 
 log_display = False
 
-def crdir(chk="dir" ,display=False) : 
-    directory = ""
-    if chk == "dir" : # 현재 디렉토리 위치 얻기
-        directory = os.getcwd()
-    elif chk == "py"  : # 현재 파이썬 파일 디렉토리 위치 얻기
-        directory = os.path.dirname(os.path.abspath(__file__))
-    else :
-        directory = "dir or py를 선택하세요."
-    if display == True :
-        print("현재 디렉토리 : " + directory)
-    return directory
+def debug_print(*args, display=False):
+    # 현재 파일명과 줄 번호 가져오기
+    frame = inspect.currentframe().f_back
+    file_name = frame.f_code.co_filename
+    line_number = frame.f_lineno
 
-def exedir() :
+    # 파일명과 줄 번호를 포함하여 로그 메시지 작성
+    message = f"[{file_name}:{line_number}] - " + " ".join(map(str, args))
+
+    # 로그 메시지 파일에 기록
+    logging.info(message)
+
+    # display=True일 때만 콘솔 출력
+    if display:
+        print(message)
+
+def exedir(chk,log_display) :
     if os.path.splitext(sys.executable)[1] == ".exe" and "python" not in sys.executable.lower():
         execute_dir = exe_directory = os.path.dirname(sys.executable)
+    elif chk == "dir" : # 현재 디렉토리 위치 얻기
+        execute_dir = os.getcwd()
+    elif chk == "py"  : # 현재 파이썬 파일 디렉토리 위치 얻기
+        execute_dir = os.path.dirname(os.path.abspath(__file__))
     else:
-        execute_dir = crdir("py", False)
+        execute_dir = "디렉토리 오류"
+    debug_print(f"msg:[{execute_dir}]",log_display)
     return execute_dir
 
 today = datetime.datetime.now().strftime("%Y%m%d")  # 'YYYYMMDD' 형식
-log_filename = os.path.expandvars(f"{exedir()}\\log_{today}.txt")
+log_filename = os.path.expandvars(f"{exedir("py", log_display)}\\log_{today}.txt")
 
 # 로그 설정 (파일 저장)
 logging.basicConfig(
@@ -90,7 +99,7 @@ def select_folder_console(display=False):
 
 def get_login_info(display=False):
     # config_file_path = f"{crdir("py", False)}/config.txt"
-    config_file_path = f"{exedir()}\\config.txt"
+    config_file_path = f"{exedir("py", log_display)}\\config.txt"
     debug_print(f"msg:[config_file_path ==> {config_file_path}",log_display)
     if os.path.exists(config_file_path):
         # 파일 읽기
@@ -111,19 +120,3 @@ def get_login_info(display=False):
     else :
         logininfo={"ID" : None,"PW" : None}
     return logininfo
-
-def debug_print(*args, display=False):
-    # 현재 파일명과 줄 번호 가져오기
-    frame = inspect.currentframe().f_back
-    file_name = frame.f_code.co_filename
-    line_number = frame.f_lineno
-
-    # 파일명과 줄 번호를 포함하여 로그 메시지 작성
-    message = f"[{file_name}:{line_number}] - " + " ".join(map(str, args))
-
-    # 로그 메시지 파일에 기록
-    logging.info(message)
-
-    # display=True일 때만 콘솔 출력
-    if display:
-        print(message)
