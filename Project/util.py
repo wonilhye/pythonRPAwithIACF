@@ -1,4 +1,4 @@
-import re, os, inspect, logging, datetime, sys
+import re, os, inspect, logging, datetime, sys, configparser
 import pandas as pd
 import tkinter as tk
 from tkinter import filedialog
@@ -120,3 +120,30 @@ def get_login_info(display=False):
     else :
         logininfo={"ID" : None,"PW" : None}
     return logininfo
+
+def load_config(file_path=f"{exedir("py", log_display)}\\config.txt"):
+    """config.txt 파일에서 로그인 정보를 읽어 딕셔너리로 반환합니다.
+    # config.txt
+    [login]
+    ID = your_username
+    PW = your_password
+    [setting]
+    SEARCHKEYWORD = keyword
+    CONSOLETF = True
+    """
+    config = configparser.ConfigParser()
+    config.read(file_path, encoding="utf-8")  # UTF-8 인코딩으로 파일 읽기
+
+    # login 섹션 읽기
+    login_info = {
+        "ID": config.get("login", "ID"),
+        "PW": config.get("login", "PW")
+    }
+    
+    # setting 섹션 읽기
+    setting_info = {
+        "SEARCHKEYWORD": config.get("setting", "SEARCHKEYWORD"),
+        "CONSOLETF": config.getboolean("setting", "CONSOLETF")  # Boolean 값으로 읽기
+    }
+
+    return {"login": login_info, "setting": setting_info}
