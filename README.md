@@ -51,3 +51,8 @@ IACF PYTHON STUDY GROUP
    1. xlsxProcess.py 이해하고 변형해가며 익히기
    2. for문 별표찍기 찾아보고 for문 사용방법 익히기
    3. DAY05 폴더에 for문 예제 10개 공부하기
+
+**여섯번째 수업 ( 2024.11.12 )**
+ - 참여자 : 8명 중 #명 참여
+ - 참여자 레파지토리
+   1. https://github.com/YeomJae
