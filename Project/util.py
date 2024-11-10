@@ -1,4 +1,4 @@
-import re, os, inspect, logging, datetime
+import re, os, inspect, logging, datetime, sys
 import pandas as pd
 import tkinter as tk
 from tkinter import filedialog
@@ -6,17 +6,6 @@ from openpyxl import load_workbook
 from PyQt5.QtWidgets import QTextEdit, QProgressBar, QFileDialog
 
 log_display = False
-
-today = datetime.datetime.now().strftime("%Y%m%d")  # 'YYYYMMDD' 형식
-log_filename = os.path.expandvars(r"%UserProfile%\\Downloads\\log_" + today + ".txt")
-
-# 로그 설정 (파일 저장)
-logging.basicConfig(
-    filename=log_filename,              # 로그 파일명
-    level=logging.INFO,                # 로그 레벨
-    format="%(asctime)s - %(message)s", # 로그 포맷
-    filemode="a"                        #a = append, w = 덮어쓰기
-)
 
 def crdir(chk="dir" ,display=False) : 
     directory = ""
@@ -29,6 +18,24 @@ def crdir(chk="dir" ,display=False) :
     if display == True :
         print("현재 디렉토리 : " + directory)
     return directory
+
+def exedir() :
+    if os.path.splitext(sys.executable)[1] == ".exe" and "python" not in sys.executable.lower():
+        execute_dir = exe_directory = os.path.dirname(sys.executable)
+    else:
+        execute_dir = crdir("py", False)
+    return execute_dir
+
+today = datetime.datetime.now().strftime("%Y%m%d")  # 'YYYYMMDD' 형식
+log_filename = os.path.expandvars(f"{exedir()}\\log_{today}.txt")
+
+# 로그 설정 (파일 저장)
+logging.basicConfig(
+    filename=log_filename,              # 로그 파일명
+    level=logging.INFO,                # 로그 레벨
+    format="%(asctime)s - %(message)s", # 로그 포맷
+    filemode="a"                        #a = append, w = 덮어쓰기
+)
 
 def acctonum(account_number) :
     # 정규식 패턴
@@ -82,8 +89,9 @@ def select_folder_console(display=False):
     return folder_path
 
 def get_login_info(display=False):
-    config_file_path = f"{crdir("py", False)}/config.txt"
-
+    # config_file_path = f"{crdir("py", False)}/config.txt"
+    config_file_path = f"{exedir()}\\config.txt"
+    debug_print(f"msg:[config_file_path ==> {config_file_path}",log_display)
     if os.path.exists(config_file_path):
         # 파일 읽기
         with open(config_file_path, 'r') as file:
