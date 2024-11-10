@@ -54,5 +54,6 @@ IACF PYTHON STUDY GROUP
 
 **여섯번째 수업 ( 2024.11.12 )**
  - 참여자 : 8명 중 #명 참여
+ - 참여자 실습습시간 : https://github.com/sahuni/pythonRPAwithIACF/tree/main/DAY06#readme 참고하여 실습
  - 참여자 레파지토리
    1. https://github.com/YeomJae
