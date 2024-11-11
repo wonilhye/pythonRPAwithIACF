@@ -1,6 +1,8 @@
 import pandas as pd
 import util
 
+log_display_bool= True
+
 # 시트 이름 설정
 SHEET_NAMES = {
     "bank": "은행자료",
@@ -10,17 +12,18 @@ SHEET_NAMES = {
     "pivot_in": "피봇입금"
 }
 
-def toExcelErp(filename):
-    directory = util.crdir("py", False)
+def toExcelErp(directory: SystemError, filename):
     
     # 계좌 번호 추출 및 파일 경로 설정
     filename2 = filename.split('_')[1][-6:]
     account_num = filename.split('_')[1]
     file_paths = {
-        "bank": f"{directory}/workF/{filename}.xls",
-        "saer": f"{directory}/workF/거래처원장 {filename2}.xls"
+        "bank": f"{directory}/{filename}",
+        "saer": f"{directory}/거래처원장 {filename2}.xls"
     }
-    output_file_path = f"{directory}/resultF/{account_num}.xlsx"
+    output_file_path = f"{directory}/{account_num}.xlsx"
+    output_file_path = output_file_path.replace("workF","resultF")
+    output_file_path = util.save_excel_with_seq(output_file_path)
 
     # 데이터프레임 읽기 및 전처리
     df_bank = pd.read_excel(file_paths["bank"], header=None).iloc[6:]
@@ -92,3 +95,22 @@ def create_pivot_tables(df_combined, bank_label, saer_label):
     df_pivot_in["상태"] = df_pivot_in["입금차액"].apply(lambda x: "정상" if x == 0 else "오류")
 
     return df_pivot_out, df_pivot_in
+
+def get_worker(directory: SystemError, search_item):
+    workers_file_path = f"{directory}\\workers.xlsx"
+    df = pd.read_excel(workers_file_path,header=0)
+    df.columns = df.columns.str.strip()
+
+    # 조건에 맞는 행 필터링
+    matched_row = df[df['계좌번호'].astype(str) == search_item]
+    # 계좌번호가 있는지 확인 후, 해당 행의 이름과 메일 가져오기
+    if not matched_row.empty:
+        name = matched_row.iloc[0]['이름']
+        email = matched_row.iloc[0]['메일']
+    else:
+        name = None
+        email = None
+        util.debug_print(f"{search_item}의 정보를 찾을 수 없습니다.", log_display=log_display_bool)
+    
+    result = {"Name" : name, "Email" : email}
+    return result
