@@ -5,7 +5,7 @@ from tkinter import filedialog
 from openpyxl import load_workbook
 from PyQt5.QtWidgets import QTextEdit, QProgressBar, QFileDialog
 
-log_display_bool= True
+log_bool= True
 
 def exedir(chk) :
     if os.path.splitext(sys.executable)[1] == ".exe" and "python" not in sys.executable.lower():
@@ -31,7 +31,7 @@ logging.basicConfig(
 )
 
 def debug_print(*args, **kwargs):
-    display = kwargs.get('log_display', False)
+    display = kwargs.get('display', False)
     # 현재 파일명과 줄 번호 가져오기
     frame = inspect.currentframe().f_back
     file_name = frame.f_code.co_filename
@@ -88,19 +88,19 @@ def select_folder_console(display=False):
     
     # 선택된 폴더가 없으면 종료
     if not folder_path:
-        debug_print("폴더가 선택되지 않았습니다. Download 폴더로 기본지정됩니다.",log_display=log_display_bool)
+        debug_print("폴더가 선택되지 않았습니다. Download 폴더로 기본지정됩니다.",display=log_bool)
         folder_path = os.path.expandvars(r"%UserProfile%\\Downloads")
     else :
         # 폴더의 파일 목록 가져오기
         file_list = os.listdir(folder_path)
-        debug_print(f"선택된 폴더: {folder_path}",log_display=log_display_bool)
+        debug_print(f"선택된 폴더: {folder_path}",display=log_bool)
     
     return folder_path
 
 def get_login_info(display=False):
     # config_file_path = f"{crdir("py", False)}/config.txt"
     config_file_path = f"{exedir("py")}\\config.txt"
-    debug_print(f"msg:[config_file_path ==> {config_file_path}",log_display=log_display_bool)
+    debug_print(f"msg:[config_file_path ==> {config_file_path}",display=log_bool)
     if os.path.exists(config_file_path):
         # 파일 읽기
         with open(config_file_path, 'r', encoding="utf-8") as file:
