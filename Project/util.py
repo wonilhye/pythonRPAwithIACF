@@ -5,9 +5,33 @@ from tkinter import filedialog
 from openpyxl import load_workbook
 from PyQt5.QtWidgets import QTextEdit, QProgressBar, QFileDialog
 
-log_display = False
+log_display_bool= True
 
-def debug_print(*args, display=False):
+def exedir(chk) :
+    if os.path.splitext(sys.executable)[1] == ".exe" and "python" not in sys.executable.lower():
+        execute_dir = os.path.dirname(sys.executable)
+    elif chk == "dir" : # 현재 디렉토리 위치 얻기
+        execute_dir = os.getcwd()
+    elif chk == "py"  : # 현재 파이썬 파일 디렉토리 위치 얻기
+        execute_dir = os.path.dirname(os.path.abspath(__file__))
+    else:
+        execute_dir = "디렉토리 오류"
+    
+    return execute_dir
+
+today = datetime.datetime.now().strftime("%Y%m%d")  # 'YYYYMMDD' 형식
+log_filename = os.path.expandvars(f"{exedir("py")}\\log_{today}.txt")
+
+# 로그 설정 (파일 저장)
+logging.basicConfig(
+    filename=log_filename,              # 로그 파일명
+    level=logging.INFO,                # 로그 레벨
+    format="%(asctime)s - %(message)s", # 로그 포맷
+    filemode="a"                        #a = append, w = 덮어쓰기
+)
+
+def debug_print(*args, **kwargs):
+    display = kwargs.get('log_display', False)
     # 현재 파일명과 줄 번호 가져오기
     frame = inspect.currentframe().f_back
     file_name = frame.f_code.co_filename
@@ -18,33 +42,9 @@ def debug_print(*args, display=False):
 
     # 로그 메시지 파일에 기록
     logging.info(message)
-
     # display=True일 때만 콘솔 출력
     if display:
         print(message)
-
-def exedir(chk,log_display) :
-    if os.path.splitext(sys.executable)[1] == ".exe" and "python" not in sys.executable.lower():
-        execute_dir = exe_directory = os.path.dirname(sys.executable)
-    elif chk == "dir" : # 현재 디렉토리 위치 얻기
-        execute_dir = os.getcwd()
-    elif chk == "py"  : # 현재 파이썬 파일 디렉토리 위치 얻기
-        execute_dir = os.path.dirname(os.path.abspath(__file__))
-    else:
-        execute_dir = "디렉토리 오류"
-    debug_print(f"msg:[{execute_dir}]",log_display)
-    return execute_dir
-
-today = datetime.datetime.now().strftime("%Y%m%d")  # 'YYYYMMDD' 형식
-log_filename = os.path.expandvars(f"{exedir("py", log_display)}\\log_{today}.txt")
-
-# 로그 설정 (파일 저장)
-logging.basicConfig(
-    filename=log_filename,              # 로그 파일명
-    level=logging.INFO,                # 로그 레벨
-    format="%(asctime)s - %(message)s", # 로그 포맷
-    filemode="a"                        #a = append, w = 덮어쓰기
-)
 
 def acctonum(account_number) :
     # 정규식 패턴
@@ -88,22 +88,22 @@ def select_folder_console(display=False):
     
     # 선택된 폴더가 없으면 종료
     if not folder_path:
-        debug_print("폴더가 선택되지 않았습니다. Download 폴더로 기본지정됩니다.",log_display)
+        debug_print("폴더가 선택되지 않았습니다. Download 폴더로 기본지정됩니다.",log_display=log_display_bool)
         folder_path = os.path.expandvars(r"%UserProfile%\\Downloads")
     else :
         # 폴더의 파일 목록 가져오기
         file_list = os.listdir(folder_path)
-        debug_print(f"선택된 폴더: {folder_path}",log_display)
+        debug_print(f"선택된 폴더: {folder_path}",log_display=log_display_bool)
     
     return folder_path
 
 def get_login_info(display=False):
     # config_file_path = f"{crdir("py", False)}/config.txt"
-    config_file_path = f"{exedir("py", log_display)}\\config.txt"
-    debug_print(f"msg:[config_file_path ==> {config_file_path}",log_display)
+    config_file_path = f"{exedir("py")}\\config.txt"
+    debug_print(f"msg:[config_file_path ==> {config_file_path}",log_display=log_display_bool)
     if os.path.exists(config_file_path):
         # 파일 읽기
-        with open(config_file_path, 'r') as file:
+        with open(config_file_path, 'r', encoding="utf-8") as file:
             # 파일의 각 줄을 읽어서 리스트로 저장
             lines = file.readlines()
 
@@ -121,7 +121,7 @@ def get_login_info(display=False):
         logininfo={"ID" : None,"PW" : None}
     return logininfo
 
-def load_config(file_path=f"{exedir("py", log_display)}\\config.txt"):
+def load_config(file_path=f"{exedir("py")}\\config.txt"):
     """config.txt 파일에서 로그인 정보를 읽어 딕셔너리로 반환합니다.
     # config.txt
     [login]
