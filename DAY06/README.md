@@ -17,10 +17,18 @@
 피봇출금|20240813|70000|0|70000|오류
 피봇출금|20240816|140000|0|140000|오류
 ### 3. util.py 최신업데이트하기
-### 4. 기존 print 함수를 debug_print()로 교체하기
+### 4. worker.xlsx 읽어서 검색어와 일치하여 이름과 메일을 가져오기
+worker.xlsx 구조
+계좌번호|담당자|메일
+------------- | ------------- | -------------
+89900100056880|홍길동|hong@abcd.co.kr
+89900100056881|고길동|go@abcd.co.kr
+
+ - xlsxProcess.py 에 get_worker() 함수를 만들어서 구현하시오
+      - def get_worker("89900100056880") 의 결과값은 {"Name" : "홍길동", "Email" : "hong@abcd.co.kr"}
+### 5. 기존 print 함수를 debug_print()로 교체하기
  - print("프린트할 내용") ==> debug_print("프린트할 내용", False)
       - True : console에도 나오고 log_yyyymmdd.txt에도 저장
       - False : console에는 나오지 않고 log_yyyymmdd.txt에만 저장
-### 5. log_yyyymmdd.txt 생성되는지 확인하기
+### 6. log_yyyymmdd.txt 생성되는지 확인하기
  - debug_print()로 변경해 놓은 내용이 해당 log파일에 저장되었는지 확인하기
-### 6. Project 폴더에 있는 README.md 파일의 util.py 코드 이해하기
