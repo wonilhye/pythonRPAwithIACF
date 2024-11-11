@@ -79,7 +79,7 @@
    - 로그 설정 (파일 저장)
      - logging.basicConfig()
    - 디렉토리 위치 얻기
-     - crdir()
+     - exedir()
    - 계좌번호 정규식 추출
      - acctonum()
    - 폴더 위치 지정
