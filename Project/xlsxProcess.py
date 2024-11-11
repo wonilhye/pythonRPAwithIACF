@@ -1,7 +1,7 @@
 import pandas as pd
 import util
 
-log_display_bool= True
+log_bool= True
 
 # 시트 이름 설정
 SHEET_NAMES = {
@@ -110,7 +110,7 @@ def get_worker(directory: SystemError, search_item):
     else:
         name = None
         email = None
-        util.debug_print(f"{search_item}의 정보를 찾을 수 없습니다.", log_display=log_display_bool)
+        util.debug_print(f"{search_item}의 정보를 찾을 수 없습니다.", display=log_bool)
     
     result = {"Name" : name, "Email" : email}
     return result
