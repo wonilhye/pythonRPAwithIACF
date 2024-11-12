@@ -17,9 +17,14 @@ def toExcelErp(directory: SystemError, filename):
     # 계좌 번호 추출 및 파일 경로 설정
     filename2 = filename.split('_')[1][-6:]
     account_num = filename.split('_')[1]
+
+    print(directory)
+    print(filename)
+
+
     file_paths = {
-        "bank": f"{directory}/{filename}",
-        "saer": f"{directory}/거래처원장 {filename2}.xls"
+        "bank": f"{directory}/workF/{filename}.xls",
+        "saer": f"{directory}/workF/거래처원장 {filename2}.xls"
     }
     output_file_path = f"{directory}/{account_num}.xlsx"
     output_file_path = output_file_path.replace("workF","resultF")
