@@ -3,7 +3,7 @@ import pandas as pd
 import tkinter as tk
 from tkinter import filedialog
 from openpyxl import load_workbook
-from PyQt5.QtWidgets import QTextEdit, QProgressBar, QFileDialog
+# from PyQt5.QtWidgets import QTextEdit, QProgressBar, QFileDialog
 
 log_bool= True
 

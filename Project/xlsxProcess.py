@@ -18,10 +18,6 @@ def toExcelErp(directory: SystemError, filename):
     filename2 = filename.split('_')[1][-6:]
     account_num = filename.split('_')[1]
 
-    print(directory)
-    print(filename)
-
-
     file_paths = {
         "bank": f"{directory}/workF/{filename}.xls",
         "saer": f"{directory}/workF/거래처원장 {filename2}.xls"
