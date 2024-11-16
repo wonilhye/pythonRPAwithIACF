@@ -1,3 +1,4 @@
+# %%
 import pandas as pd
 import util
 
@@ -9,7 +10,8 @@ SHEET_NAMES = {
     "saer": "회계자료",
     "combined": "시트합치기",
     "pivot_out": "피봇출금",
-    "pivot_in": "피봇입금"
+    "pivot_in": "피봇입금",
+    "err": "오류확인대상" #1112 새로운 시트
 }
 
 def toExcelErp(directory: SystemError, filename):
@@ -56,7 +58,8 @@ def toExcelErp(directory: SystemError, filename):
         df_combined.to_excel(writer, sheet_name=SHEET_NAMES["combined"], index=False)
         df_pivot_out.to_excel(writer, sheet_name=SHEET_NAMES["pivot_out"])
         df_pivot_in.to_excel(writer, sheet_name=SHEET_NAMES["pivot_in"])
-
+        df_err(df_pivot_in, df_pivot_out).to_excel(writer, sheet_name=SHEET_NAMES["err"])
+        
 def preprocess_bank_data(df_bank):
     """은행 데이터를 정리합니다."""
     df_bank['거래일시'] = df_bank['거래일시'].str.replace('.', '', regex=False).str.slice(0, 8)
@@ -115,3 +118,27 @@ def get_worker(directory: SystemError, search_item):
     
     result = {"Name" : name, "Email" : email}
     return result
+
+def df_err(df_pivot_in,df_pivot_out):
+    
+    # df_pivot_in = df_pivot_in[['거래일시', '은행자료', '회계자료', '입금차액', '상태']]
+    # df_pivot_out.columns = ['거래일시', '은행자료', '회계자료', '출금차액', '상태']
+    # df_pivot_in.insert(0, '구분', SHEET_NAMES['pivot_in'])
+    # df_pivot_in.insert(4, '출금차액', SHEET_NAMES['pivot_in'])
+    
+    # df_pivot_out = df_pivot_out[['거래일시', '은행자료', '회계자료', '출금차액', '상태']]
+    # df_pivot_out.columns = ['거래일시', '은행자료', '회계자료', '출금차액', '상태']
+    # df_pivot_out.insert(0, '구분', SHEET_NAMES['pivot_out'])
+    # df_pivot_out.insert(4, '출금차액', SHEET_NAMES['pivot_out'])
+    df_pivot_in = df_pivot_in[df_pivot_in['상태'] == '오류']
+    df_pivot_in.rename(columns={'입금차액': '차액'}, inplace=True)
+    df_pivot_in.insert(0, '구분', SHEET_NAMES['pivot_in'])
+    df_pivot_out = df_pivot_out[df_pivot_out['상태'] == '오류']
+    df_pivot_out.rename(columns={'출금차액': '차액'}, inplace=True)
+    df_pivot_out.insert(0, '구분', SHEET_NAMES['pivot_out'])
+    
+    df_err = pd.concat([df_pivot_in, df_pivot_out])
+    df_err.reset_index(inplace=True)
+    df_err.set_index(keys='구분', inplace=True)
+    return df_err
+
