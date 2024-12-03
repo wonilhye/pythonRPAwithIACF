@@ -1,37 +1,42 @@
 import re, os, inspect, logging, datetime, sys, configparser
 import pandas as pd
 import tkinter as tk
+import configparser
 from tkinter import filedialog
 from openpyxl import load_workbook
-# from PyQt5.QtWidgets import QTextEdit, QProgressBar, QFileDialog
 
 log_bool= True
 
-def exedir(chk) :
-    if os.path.splitext(sys.executable)[1] == ".exe" and "python" not in sys.executable.lower():
-        execute_dir = os.path.dirname(sys.executable)
-    elif chk == "dir" : # 현재 디렉토리 위치 얻기
-        execute_dir = os.getcwd()
-    elif chk == "py"  : # 현재 파이썬 파일 디렉토리 위치 얻기
-        execute_dir = os.path.dirname(os.path.abspath(__file__))
+def exedir(mode="script"):
+    """
+    mode:
+    - "cwd": 현재 작업 디렉토리
+    - "exe": 실행 파일 디렉토리
+    - "script": 스크립트 파일 디렉토리
+    """
+    if mode == "exe" and os.path.splitext(sys.executable)[1] == ".exe" and "python" not in sys.executable.lower():
+        return os.path.dirname(sys.executable)
+    elif mode == "cwd":
+        return os.getcwd()
+    elif mode == "script":
+        return os.path.dirname(os.path.abspath(__file__))
     else:
-        execute_dir = "디렉토리 오류"
-    
-    return execute_dir
+        raise ValueError("Invalid mode. Use 'cwd', 'exe', or 'script'.")
+
 
 today = datetime.datetime.now().strftime("%Y%m%d")  # 'YYYYMMDD' 형식
-log_filename = os.path.expandvars(f"{exedir("py")}\\log_{today}.txt")
+log_filename = os.path.expandvars(f"{exedir("script")}\\log_{today}.log")
 
 # 로그 설정 (파일 저장)
 logging.basicConfig(
     filename=log_filename,              # 로그 파일명
     level=logging.INFO,                # 로그 레벨
     format="%(asctime)s - %(message)s", # 로그 포맷
+    encoding='utf-8',       # UTF-8 인코딩 설정
     filemode="a"                        #a = append, w = 덮어쓰기
 )
 
 def debug_print(*args, **kwargs):
-    display = kwargs.get('display', False)
     # 현재 파일명과 줄 번호 가져오기
     frame = inspect.currentframe().f_back
     file_name = frame.f_code.co_filename
@@ -42,8 +47,8 @@ def debug_print(*args, **kwargs):
 
     # 로그 메시지 파일에 기록
     logging.info(message)
-    # display=True일 때만 콘솔 출력
-    if display:
+    
+    if kwargs.get('LOG', True) :
         print(message)
 
 def acctonum(account_number) :
@@ -53,10 +58,6 @@ def acctonum(account_number) :
     result = re.search(pattern, account_number)
     account_number = result.group().replace('-', '') if result else None
     return str(account_number)
-
-def select_folder(widget):
-    folder_path = QFileDialog.getExistingDirectory(widget, "폴더 선택")
-    return folder_path
 
 def create_folder(folder_path):
     if not os.path.exists(folder_path):
@@ -98,8 +99,7 @@ def select_folder_console(display=False):
     return folder_path
 
 def get_login_info(display=False):
-    # config_file_path = f"{crdir("py", False)}/config.txt"
-    config_file_path = f"{exedir("py")}\\config.txt"
+    config_file_path = f"{exedir("script")}\\config.env"
     debug_print(f"msg:[config_file_path ==> {config_file_path}",display=log_bool)
     if os.path.exists(config_file_path):
         # 파일 읽기
@@ -121,29 +121,20 @@ def get_login_info(display=False):
         logininfo={"ID" : None,"PW" : None}
     return logininfo
 
-def load_config(file_path=f"{exedir("py")}\\config.txt"):
-    """config.txt 파일에서 로그인 정보를 읽어 딕셔너리로 반환합니다.
-    # config.txt
-    [login]
-    ID = your_username
-    PW = your_password
-    [setting]
-    SEARCHKEYWORD = keyword
-    CONSOLETF = True
-    """
+def load_config(file_path=f"{exedir("script")}\\config.txt"):
     config = configparser.ConfigParser()
-    config.read(file_path, encoding="utf-8")  # UTF-8 인코딩으로 파일 읽기
+    config.optionxform = str  # 키 이름의 대소문자 구분 유지
 
-    # login 섹션 읽기
-    login_info = {
-        "ID": config.get("login", "ID"),
-        "PW": config.get("login", "PW")
-    }
-    
-    # setting 섹션 읽기
-    setting_info = {
-        "SEARCHKEYWORD": config.get("setting", "SEARCHKEYWORD"),
-        "CONSOLETF": config.getboolean("setting", "CONSOLETF")  # Boolean 값으로 읽기
-    }
-
-    return {"login": login_info, "setting": setting_info}
+    # UTF-8 인코딩으로 파일 읽기
+    config.read(file_path, encoding="utf-8")
+    # 모든 섹션과 항목을 동적으로 읽어서 딕셔너리로 변환
+    config_data = {}
+    for section in config.sections():
+        config_data[section] = {}
+        for key in config[section]:
+            # Boolean 값인 경우 처리
+            if config[section][key].lower() in ['true', 'false']:
+                config_data[section][key] = config.getboolean(section, key)
+            else:
+                config_data[section][key] = config.get(section, key)
+    return config_data
